@@ -1,6 +1,6 @@
 #include "WIFIFunctions.h"
 
-
+// do investigation into what this actually does
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 4, 1);
 DNSServer dnsServer;
@@ -60,9 +60,17 @@ void configWifi() {
   }
 
   responseMainHTML += F("</select>"
-                    "<form method='POST' action='wifisave'>"
+                    "<form method='POST' action='wifisave' onsubmit='showLoadingTag()'>"
                     "<br /><input type='password' placeholder='password' name='p'/>"
                     "<br /><input type='submit' value='Connect/Disconnect'/></form>"
+                    "<div id='loading-tag' style='display: none;'>"
+                    "Loading..."
+                    "</div>"
+                    "<script>"
+                    "function showLoadingTag() {"
+                    "document.getElementById('loading-tag').style.display = 'block';"
+                    "}"
+                    "</script>"
                     "</body></html>");
 
   webServer.on("/wifisave", []() {

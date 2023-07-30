@@ -1,7 +1,7 @@
 #include "DisplayFunctions.h"
 #include "RFIDFunctions.h"
 #include "WIFIFunctions.h"
-#include "config.h"
+#include "configDevice.h"
 #include <EEPROM.h>
 
 /*

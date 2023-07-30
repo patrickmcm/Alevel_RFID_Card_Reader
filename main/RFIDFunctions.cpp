@@ -2,7 +2,7 @@
 
 #define RST_PIN         0  
 #define SS_PIN          2   
-MFRC522 mfrc522(SS_PIN, RST_PIN); // Assuming you have defined SS_PIN and RST_PIN somewhere
+MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setupRFID() {
   SPI.begin();
