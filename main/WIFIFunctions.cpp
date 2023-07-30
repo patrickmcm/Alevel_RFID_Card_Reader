@@ -50,7 +50,7 @@ void configWifi() {
 
   responseMainHTML += "<label for='networks'>WLAN list (refresh if any missing)</label>"
                   "<h3>* = Password needed</h3>"
-                  "<form method='POST' action='wifisave'><h4>Connect to network:</h4>"
+                  "<form method='POST' action='wifisave' onsubmit='showLoadingTag()'><h4>Connect to network:</h4>"
                   "<select name=\"n\" id=\"networks\">";
   int nNetworks = WiFi.scanNetworks();
   if (nNetworks > 0) {
@@ -60,7 +60,6 @@ void configWifi() {
   }
 
   responseMainHTML += F("</select>"
-                    "<form method='POST' action='wifisave' onsubmit='showLoadingTag()'>"
                     "<br /><input type='password' placeholder='password' name='p'/>"
                     "<br /><input type='submit' value='Connect/Disconnect'/></form>"
                     "<div id='loading-tag' style='display: none;'>"
