@@ -17,9 +17,6 @@ void setup() {
   Serial.begin(115200);
   EEPROM.begin(1024);
   setupDisplay();
-
-  // TO BE CHANGED
-
   setupWifi();
   if (EEPROM.read(110) == 0){
     setupDevice();
