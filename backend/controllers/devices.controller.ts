@@ -24,65 +24,35 @@ const register = async (req: Request, res: Response) => {
     const publicIP = req.ip
 
 
-    
-    // reject request if any params are null
-    if (!ssid ||  !uid){
-        return res.status(httpStatus.BAD_REQUEST).json({
-            sucess: false,
-            dbMessage: null,
-            serverMessage: "NULL_PARAM"
-        })
-    }
-
-    
     try {
+        if (!ssid ||  !uid){ throw new Error("NULL_PARAM") }; // reject request if any params are null
         const db = await getDB();
         const devices = db.collection<deviceInterface>("devices")
-        // recalculate the signature to check message authenticity
+        
+        // fetch the device in db for some basic checks
         let deviceForConfirmation = await devices.findOne<deviceInterface>({
             deviceUID:uid
         })
-        if(!deviceForConfirmation){
-            return res.status(httpStatus.BAD_REQUEST).json({
-                success: false,
-                dbMessage: null,
-                serverMessage: "NO_RECORD"
-            })
-        }
+        
+        if(!deviceForConfirmation) { throw new Error("NO_RECORD")}; // check it actually exists
+        if(hmac(deviceForConfirmation.psk,uid) !== signature) {throw new Error("BAD_SIG")}; // verify signature
+        if(deviceForConfirmation.registed) { throw new Error("ALREADY_REGISTED") }; // checks if registerd
 
-        if(hmac(deviceForConfirmation.psk,uid) !== signature){
-            return res.status(httpStatus.BAD_REQUEST).json({
-                success: false,
-                dbMessage: null,
-                serverMessage: "BAD_SIG"
-            })
-        }
-        console.log(deviceForConfirmation.registed)
-        if(deviceForConfirmation.registed){
-            return res.status(httpStatus.BAD_REQUEST).json({
-                success: false,
-                dbMessage: null,
-                serverMessage: "ALREADY_REGISTED"
-            })
-        }
-
-        let device = await devices.updateOne({deviceUID: uid},{
+        await devices.updateOne({deviceUID: uid},{
             $set:{
                 ssid: ssid,
                 publicIP: publicIP,
             }
         })
-        console.log(device)
     } catch(e) {
         console.log(e)
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(httpStatus.BAD_REQUEST).json({
             success: false,
-            dbMessage: e,
-            serverMessage: "DB_FAILURE"
+            error: e
         })
     }
-
-    res.send("the");
 }
 
-module.exports = { register };
+export {
+    register
+};
