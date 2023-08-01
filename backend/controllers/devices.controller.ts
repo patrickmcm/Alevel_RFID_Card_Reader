@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { deviceInterface } from '../db/devices.types';
-import { hmac } from '../utils/hmac';
+import deviceInterface  from '../db/devices.types';
+import hmac from '../utils/hmac';
 import httpStatus from 'http-status';
 import getDB from '../db/connect';
+import generateOTC from '../utils/generateOTC';
+import { isValidNonce } from '../utils/validNonce';
 
 /*
 TASK: SETUP BASIC SIGNING AND COMMUNICATION BETWEEN CLIENT-SERVER
@@ -18,11 +20,14 @@ TASK: SETUP BASIC SIGNING AND COMMUNICATION BETWEEN CLIENT-SERVER
 
 
 const register = async (req: Request, res: Response) => {
-    const signature = req.body.signature
-    const ssid = req.body.ssid;
-    const uid = req.body.uid
+    const signature = req.body.signature;
+    const nonce = req.body.data.nonce;
+    const clientTimestamp = req.body.data.timestamp;
+    const ssid = req.body.data.ssid;
+    const uid = req.body.data.uid
     const publicIP = req.ip
 
+    // data has to be submitted in the same order everytime btw
 
     try {
         if (!ssid ||  !uid){ throw new Error("NULL_PARAM") }; // reject request if any params are null
@@ -34,24 +39,39 @@ const register = async (req: Request, res: Response) => {
             deviceUID:uid
         })
         
+        const serverTimestamp = Math.round(Date.now()/1000)
+        console.log(serverTimestamp)
         if(!deviceForConfirmation) { throw new Error("NO_RECORD")}; // check it actually exists
-        if(hmac(deviceForConfirmation.psk,uid) !== signature) {throw new Error("BAD_SIG")}; // verify signature
+        isValidNonce(nonce) // check if valid nonce
+        if((serverTimestamp-clientTimestamp)>5) { throw new Error("TIMEOUT") } // only accept 5s delay
+        if(hmac(deviceForConfirmation.psk,JSON.stringify(req.body.data)+nonce) !== signature) {throw new Error("BAD_SIG")}; // verify signature
         if(deviceForConfirmation.registed) { throw new Error("ALREADY_REGISTED") }; // checks if registerd
+
+        const otc = await generateOTC(devices)
 
         await devices.updateOne({deviceUID: uid},{
             $set:{
                 ssid: ssid,
                 publicIP: publicIP,
+                otc: otc
             }
         })
-    } catch(e) {
+
+        res.json({
+            success:true,
+            otc:otc
+        })
+    } catch(e:any) {
         console.log(e)
         return res.status(httpStatus.BAD_REQUEST).json({
             success: false,
-            error: e
+            error: e.message
         })
     }
 }
+
+
+
 
 export {
     register
