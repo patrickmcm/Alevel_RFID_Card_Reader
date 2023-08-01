@@ -14,6 +14,10 @@ void setupDevice() {
     - add to struct then send to server
     - server checks with public key
   */
+  
+
+
+
   int otc = 123456;
   registerMessage(otc);
   // code displayed to user, now we would wait for data from server
