@@ -59,6 +59,7 @@ const register = async (req: Request, res: Response) => {
 
         res.json({
             success:true,
+            error:null,
             otc:otc
         })
     } catch(e:any) {
