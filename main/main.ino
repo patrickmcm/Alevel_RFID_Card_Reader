@@ -11,6 +11,15 @@ GOALS:
 3. make frontend
 
 
+- For project sake physical security is out of scope
+- Consider HMAC instead of ECC bc of overhead
+- SPI can use shared pins only the CS (chip select) pin needs to be diffrent!
+
+
+NOTES:
+ - CHAR SIZE IS 6X8 PIXELS, INCREASES AS FACTOR WITH FONT SIZE
+ - E.G. SETTEXTSIZE(3) IS 18X24 PIXELS
+
 */
 
 void setup() {

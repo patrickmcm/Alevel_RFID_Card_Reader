@@ -1,7 +1,7 @@
 #include "RFIDFunctions.h"
 
-#define RST_PIN         0  
-#define SS_PIN          2   
+#define RST_PIN         D3  
+#define SS_PIN          D0  
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setupRFID() {
