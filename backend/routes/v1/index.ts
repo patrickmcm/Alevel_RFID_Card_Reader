@@ -2,7 +2,13 @@ import express from 'express'
 import { routerDevice } from './devices.route'
 const router = express.Router();
 
-const defaultRoutes = [
+type routeList = {
+    path: string,
+    route: any
+}[]
+
+
+const defaultRoutes: routeList = [
     {
         path: '/devices',
         route: routerDevice,
@@ -10,7 +16,7 @@ const defaultRoutes = [
 ];
 
 
-defaultRoutes.forEach((defaultRoutes : {path: string, route: any}) => {
+defaultRoutes.forEach(defaultRoutes => {
     router.use(defaultRoutes.path, defaultRoutes.route);
 });
 
