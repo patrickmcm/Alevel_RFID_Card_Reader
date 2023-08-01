@@ -1,19 +1,18 @@
 #include "DisplayFunctions.h"
 
-#define TFT_DC D4
-#define TFT_CS D2
-#define TFT_RST D3
+#define TFT_DC D1
+#define TFT_CS D4
+#define TFT_RST D2
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
 void setupDisplay() {
   tft.begin();
-  tft.setRotation(3);
+  tft.setRotation(1);
 }
 
 void showDataOnDisplay(String uid) {
-  // Display the data on the OLED
-  // You can use the buffer_to_hex_string and display functions from the previous examples
+
   tft.fillScreen(ILI9341_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(ILI9341_WHITE);

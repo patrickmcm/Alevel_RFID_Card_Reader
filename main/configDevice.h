@@ -2,7 +2,7 @@
 #define CONFIG_DEVICE_H
 
 #include "DisplayFunctions.h"
-#include <EEPROM.h>
+#include <Crypto.h>
 #include <ESP8266HTTPClient.h>
 
 void setupDevice();

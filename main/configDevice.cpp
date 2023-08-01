@@ -1,6 +1,8 @@
 #include "configDevice.h"
 
 
+
+
 void setupDevice() {
   /*
   get code from http server but for now
