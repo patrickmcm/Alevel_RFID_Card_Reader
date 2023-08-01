@@ -1,0 +1,4 @@
+backend/node_modules
+backend/config
+backend/dist
+backend/dist/controllers/devices.controller.js
