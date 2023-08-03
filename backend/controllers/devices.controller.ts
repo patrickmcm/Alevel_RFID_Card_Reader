@@ -68,6 +68,11 @@ const register = async (req: Request, res: Response) => {
             success: false,
             error: e.message
         })
+    } finally {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: "INTERNAL_ERROR"
+        })
     }
 }
 
