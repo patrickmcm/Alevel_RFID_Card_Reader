@@ -1,5 +1,5 @@
 backend/node_modules
 backend/package-lock.json
-backend/config
 backend/dist
 
+backend/config.ts
