@@ -4,7 +4,7 @@ const routerDevice = require('express').Router();
 const devicesControler = require('../../controllers/devices.controller');
 
 
-routerDevice.post('/register', devicesControler.register);
+routerDevice.post('/requestotc', devicesControler.requestOTC);
 
 
 export {

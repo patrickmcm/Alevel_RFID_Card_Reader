@@ -7,6 +7,7 @@
 // Function prototypes
 void setupDisplay();
 void showDataOnDisplay(String uid);
+void connectAttempt();
 void registerMessage(int otc);
 void setupWifiMessage();
 

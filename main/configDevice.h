@@ -8,6 +8,7 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+
 void setupDevice();
 unsigned long getTime();
 String shaHmac(String data, String key);

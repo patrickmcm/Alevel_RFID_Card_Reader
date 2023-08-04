@@ -16,30 +16,59 @@ void setupDevice() {
 
   WiFiClient client;
   ESP8266WiFiSTAClass WiFi;
+  HTTPClient http;
 
 
-  HTTPClient().begin(client, "http://localhost:3000/v1/devices/register");
+  http.begin(client, "http://192.168.137.1:3000/v1/devices/requestotc");
+  http.addHeader("Content-Type", "application/json"); 
+  
 
   
   DynamicJsonDocument doc(1024);
 
   unsigned long epochTime = getTime();
-  String nonce = "fasdfasdf"
+  unsigned long nonce = epochTime; // placeholder
 
   JsonObject dataObj = doc.createNestedObject("data");
   dataObj["uid"] = WiFi.macAddress();
   dataObj["ssid"] = WiFi.SSID();
   dataObj["timestamp"] = epochTime;
-  dataObj["nonce"] = nonce;
+  dataObj["nonce"] = epochTime;
   String jsonDoc;
   serializeJson(dataObj,jsonDoc);
+  
   doc["signature"] = shaHmac(jsonDoc+nonce,"2555885553752669D66245EBE549B");
-  Serial.println();
-  serializeJson(doc,Serial);
-  // now just send to server
+
+  String finalDoc;
+  serializeJson(doc,finalDoc);
 
 
-  //registerMessage(otc);
+  int status = http.POST(finalDoc);
+  Serial.println(status);
+  if (status < 0 ) {
+    Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(status).c_str());
+
+  }
+  
+  /*  
+  unsigned long lastMillis = millis();
+  while (status != 200) {
+    if ((millis() - lastMillis) < 2000) { continue; }
+    status = http.POST(jsonDoc);
+    lastMillis = millis();
+  }
+
+  */
+
+  DynamicJsonDocument payload(1024);
+
+  deserializeJson(payload, http.getString());
+
+  Serial.println(http.getString());
+
+  http.end();
+
+  registerMessage(payload["otc"]);
   // code displayed to user, now we would wait for data from server
 
   
@@ -69,13 +98,16 @@ String shaHmac(String data, String key) {
 
   SHA256 sha256;
   sha256.resetHMAC(keyChars, strlen(keyChars));
-  sha256.update((const uint8_t*)dataChars, strlen(dataChars));
+  sha256.update(dataChars, strlen(dataChars));
   sha256.finalizeHMAC(keyChars, strlen(keyChars), result, sizeof(result));
 
-  String hash = "";
-  for (int i = 0; i < sizeof(result); i++) {
-    hash += String(result[i], HEX);
+  char hash[65]; // 2 characters per byte + 1 for null terminator
+
+  // Convert the byte array to a hexadecimal string
+  for (int i = 0; i < 32; i++) {
+    sprintf(&hash[i * 2], "%02x", result[i]);
   }
-  
-  return hash; // Add the return statement to return the calculated hash
+  hash[64] = '\0'; // Null-terminate the string
+
+  return String(hash);
 }
