@@ -18,61 +18,38 @@ void setupDevice() {
   ESP8266WiFiSTAClass WiFi;
   HTTPClient http;
 
-
-  http.begin(client, "http://192.168.137.1:3000/v1/devices/requestotc");
-  http.addHeader("Content-Type", "application/json"); 
-  
-
-  
-  DynamicJsonDocument doc(1024);
-
-  unsigned long epochTime = getTime();
-  unsigned long nonce = epochTime; // placeholder
-
-  JsonObject dataObj = doc.createNestedObject("data");
-  dataObj["uid"] = WiFi.macAddress();
-  dataObj["ssid"] = WiFi.SSID();
-  dataObj["timestamp"] = epochTime;
-  dataObj["nonce"] = epochTime;
-  String jsonDoc;
-  serializeJson(dataObj,jsonDoc);
-  
-  doc["signature"] = shaHmac(jsonDoc+nonce,"2555885553752669D66245EBE549B");
-
-  String finalDoc;
-  serializeJson(doc,finalDoc);
-
-
-  int status = http.POST(finalDoc);
-  Serial.println(status);
-  if (status < 0 ) {
-    Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(status).c_str());
-
-  }
-  
-  /*  
   unsigned long lastMillis = millis();
+  int status = 0;
+  int otc = 0;
   while (status != 200) {
     if ((millis() - lastMillis) < 2000) { continue; }
-    status = http.POST(jsonDoc);
-    lastMillis = millis();
+
+
+    http.begin(client, "http://192.168.137.1:3000/v1/devices/requestotc");
+
+    http.addHeader("Content-Type", "application/json");
+
+    String reqBody = buildBody(WiFi,getTime(), "2555885553752669D66245EBE549B");
+
+    status = http.POST(reqBody);
+
+    if (status != 200 ) {
+      Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(status).c_str());
+      lastMillis = millis();
+      continue;
+    }
+
+    DynamicJsonDocument payload(1024);
+
+    deserializeJson(payload, http.getString());
+
+    otc = payload["otc"];
+
+    http.end();
   }
-
-  */
-
-  DynamicJsonDocument payload(1024);
-
-  deserializeJson(payload, http.getString());
-
-  Serial.println(http.getString());
-
-  http.end();
-
-  registerMessage(payload["otc"]);
-  // code displayed to user, now we would wait for data from server
-
   
 
+  registerMessage(otc);
 
 }
 
@@ -110,4 +87,25 @@ String shaHmac(String data, String key) {
   hash[64] = '\0'; // Null-terminate the string
 
   return String(hash);
+}
+
+String buildBody(ESP8266WiFiSTAClass WiFi, unsigned long nonce, String key){
+  DynamicJsonDocument doc(1024);
+
+  unsigned long epochTime = nonce; // change
+
+  JsonObject dataObj = doc.createNestedObject("data");
+  dataObj["uid"] = WiFi.macAddress();
+  dataObj["ssid"] = WiFi.SSID();
+  dataObj["timestamp"] = epochTime;
+  dataObj["nonce"] = epochTime;
+  String jsonDoc;
+  serializeJson(dataObj,jsonDoc);
+  
+  doc["signature"] = shaHmac(jsonDoc+nonce,key);
+
+  String finalDoc;
+  serializeJson(doc,finalDoc);
+
+  return finalDoc;
 }
