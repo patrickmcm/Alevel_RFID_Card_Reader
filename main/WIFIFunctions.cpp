@@ -102,6 +102,7 @@ void configWifi() {
   // disable AP here and turn off webServer.
   WiFi.softAPdisconnect(true);
   webServer.close();
+  dnsServer.stop();
 }
 
 
