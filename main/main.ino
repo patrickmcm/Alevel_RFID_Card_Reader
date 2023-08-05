@@ -3,6 +3,7 @@
 #include "WIFIFunctions.h"
 #include "configDevice.h"
 #include <EEPROM.h>
+#include <time.h>
 
 /*
 GOALS:
@@ -22,11 +23,15 @@ NOTES:
 
 */
 
+const char* ntpServer = "pool.ntp.org";
+unsigned long epochTime;
+
 void setup() {
   Serial.begin(115200);
   EEPROM.begin(1024);
   setupDisplay();
   setupWifi();
+  configTime(0,0,ntpServer);
   if (EEPROM.read(110) == 0){
     setupDevice();
   }

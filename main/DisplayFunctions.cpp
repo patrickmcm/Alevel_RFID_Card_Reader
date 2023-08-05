@@ -37,6 +37,15 @@ void registerMessage(int otc) {
   tft.print(otc);
 }
 
+void displayStartupConnection() {
+  tft.fillScreen(ILI9341_BLACK);
+  tft.setTextColor(ILI9341_WHITE);
+
+  tft.setCursor(43,108);
+  tft.setTextSize(3);
+  tft.println("Connecting...");
+}
+
 void setupWifiMessage() {
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(ILI9341_WHITE);
