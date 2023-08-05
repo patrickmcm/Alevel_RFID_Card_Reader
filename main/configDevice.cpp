@@ -25,7 +25,7 @@ void setupDevice() {
     if ((millis() - lastMillis) < 2000) { continue; }
 
 
-    http.begin(client, "http://192.168.137.1:3000/v1/devices/requestotc");
+    http.begin(client, "http://192.168.1.18:3000/v1/devices/requestotc");
 
     http.addHeader("Content-Type", "application/json");
 

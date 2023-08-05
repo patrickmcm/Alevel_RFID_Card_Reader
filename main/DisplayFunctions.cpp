@@ -37,7 +37,7 @@ void registerMessage(int otc) {
   tft.print(otc);
 }
 
-void connectAttempt() {
+void displayStartupConnection() {
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(ILI9341_WHITE);
 

@@ -13,7 +13,7 @@ char password[65] = "";
 
 void setupWifi() {
   loadFromEEPROM();
-  connectAttempt();
+  displayStartupConnection();
 
   bool connected = false;
   for (int tries = 0; tries < 3; tries++) {
@@ -56,16 +56,16 @@ void configWifi() {
   });
   webServer.onNotFound([]() {
     String responseMainHTML = ""
-                          "<!DOCTYPE html><html lang='en'><head>"
-                          "<meta name='viewport' content='width=device-width'>"
-                          "<title>CaptivePortal</title></head><body>";
+                              "<!DOCTYPE html><html lang='en'><head>"
+                              "<meta name='viewport' content='width=device-width'>"
+                              "<title>CaptivePortal</title></head><body>";
     responseMainHTML += "<label for='networks'>WLAN list (refresh if any missing)</label>"
                         "<h3>* = Password needed</h3>"
                         "<form method='POST' action='wifisave' onsubmit='showLoadingTag()'><h4>Connect to network:</h4>"
                         "<select name=\"n\" id=\"networks\">";
     int nNetworks = WiFi.scanNetworks();
     if (nNetworks > 0) {
-      for (int i = 0; i < nNetworks; i++) { responseMainHTML += "<option value=" + WiFi.SSID(i) + ">" + WiFi.SSID(i) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? F(" ") : F(" *")) + F(" (") + WiFi.RSSI(i) + F(")</option>"); }
+      for (int i = 0; i < nNetworks; i++) {responseMainHTML += "<option value=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + ((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? F(" ") : F(" *")) + F(" (") + WiFi.RSSI(i) + F(")</option>");}
     } else {
       responseMainHTML += F("<h1>No WLAN found</h1>>");
     }
