@@ -1,8 +1,8 @@
 import crypto from 'node:crypto'
-import {deviceInterface} from '../db/devices.types'
+import {deviceSchema} from '../db/devices.types'
 import { Collection } from 'mongodb'
 
-async function generateOTC(devices:Collection<deviceInterface>) {
+async function generateOTC(devices:Collection<deviceSchema>) {
     const array = new Uint8Array(6)
     crypto.webcrypto.getRandomValues(array)
     let otc = ""

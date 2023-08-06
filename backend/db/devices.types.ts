@@ -1,4 +1,4 @@
-interface deviceInterface {
+interface deviceSchema {
     ssid: string,
     deviceUID: string,
     otc: string,
@@ -19,6 +19,6 @@ interface registerBody {
 }
 
 export {
-    deviceInterface,
+    deviceSchema,
     registerBody
 }

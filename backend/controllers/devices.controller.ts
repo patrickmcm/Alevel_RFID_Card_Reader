@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {deviceInterface, registerBody}  from '../db/devices.types';
+import {deviceSchema, registerBody}  from '../db/devices.types';
 import hmac from '../utils/hmac';
 import httpStatus from 'http-status';
 import getDB from '../db/connect';
@@ -21,9 +21,9 @@ TASK: SETUP BASIC SIGNING AND COMMUNICATION BETWEEN CLIENT-SERVER
 
 */
 
-async function register(req: Request, res: Response) {
+async function registerDevice(req: Request, res: Response) {
     const registerBody: registerBody = req.body
-
+    
     res.send(registerBody)
 }
 
@@ -34,12 +34,13 @@ async function requestOTC(req: Request, res: Response) {
     const ssid: string = req.body.data.ssid;
     // data has to be submitted in the same order everytime btw
     try {
-        if (!ssid || !req.body.data.uid) { throw new Error("NULL_PARAM"); }; // reject request if any params are null
+        if (!req.body.data.uid) { throw new Error("NULL_PARAM"); }; // expand this to make it clear which error
+        
         const db = await getDB();
-        const devices = db.collection<deviceInterface>("devices");
+        const devices = db.collection<deviceSchema>("devices");
 
         // fetch the device in db for some basic checks
-        let deviceForConfirmation = await devices.findOne<deviceInterface>({
+        let deviceForConfirmation = await devices.findOne<deviceSchema>({
             deviceUID: req.body.data.uid
         });
 
@@ -80,5 +81,5 @@ async function requestOTC(req: Request, res: Response) {
 
 export {
     requestOTC,
-    register
+    registerDevice
 };

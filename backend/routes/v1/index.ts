@@ -1,5 +1,6 @@
 import express from 'express'
 import { routerDevice } from './devices.route'
+import { routerUser } from './users.route';
 const router = express.Router();
 
 type routeList = {
@@ -13,6 +14,10 @@ const defaultRoutes: routeList = [
         path: '/devices',
         route: routerDevice,
     },
+    {
+        path: '/users',
+        route: routerUser
+    }
 ];
 
 
