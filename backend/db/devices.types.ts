@@ -1,4 +1,4 @@
-export default interface deviceInterface {
+interface deviceInterface {
     ssid: string,
     deviceUID: string,
     otc: string,
@@ -7,4 +7,18 @@ export default interface deviceInterface {
     registedUserUID: string,
     registed: boolean,
     lastHash: string
+}
+
+interface registerBody {
+    signature: string,
+    data: {
+        otc: string,
+        uid: string,
+        nonce: string,
+    }
+}
+
+export {
+    deviceInterface,
+    registerBody
 }

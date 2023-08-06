@@ -18,12 +18,12 @@ void setupDevice() {
   ESP8266WiFiSTAClass WiFi;
   HTTPClient http;
 
-  unsigned long lastMillis = millis();
   int status = 0;
+  int tries = 0;
+  bool failed = false;
   int otc = 0;
   while (status != 200) {
-    if ((millis() - lastMillis) < 2000) { continue; }
-
+    if (tries >= 5) {failed = true; break;}
 
     http.begin(client, "http://192.168.1.18:3000/v1/devices/requestotc");
 
@@ -35,7 +35,8 @@ void setupDevice() {
 
     if (status != 200 ) {
       Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(status).c_str());
-      lastMillis = millis();
+      http.end();
+      tries++;
       continue;
     }
 
@@ -47,10 +48,13 @@ void setupDevice() {
 
     http.end();
   }
-  
 
-  registerMessage(otc);
+  if(!failed) {
+    registerMessage(otc);
+    return;
+  }
 
+  showErrorMessage("Failed to connect to server, please try again later");
 }
 
 

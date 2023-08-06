@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import deviceInterface  from '../db/devices.types';
+import {deviceInterface, registerBody}  from '../db/devices.types';
 import hmac from '../utils/hmac';
 import httpStatus from 'http-status';
 import getDB from '../db/connect';
@@ -14,16 +14,18 @@ TASK: SETUP BASIC SIGNING AND COMMUNICATION BETWEEN CLIENT-SERVER
 3. SETUP ANOTHER ROUTE, ACCEPTS CODE AND CHANGE RECORD IN DB
 
 
-5th august:
-1. finish client side, settuping up HTTP POST
-2. setup new route assign device to an account 
-3. write user interfaces, transactions aswell
-4. setup transactions and useers routes
+6th august:
+1. create user routes. and user types
+2. create register route
 
 
 */
 
+async function register(req: Request, res: Response) {
+    const registerBody: registerBody = req.body
 
+    res.send(registerBody)
+}
 
 async function requestOTC(req: Request, res: Response) {
     const signature: string = req.body.signature;
@@ -77,5 +79,6 @@ async function requestOTC(req: Request, res: Response) {
 
 
 export {
-    requestOTC
+    requestOTC,
+    register
 };

@@ -5,6 +5,7 @@ const devicesControler = require('../../controllers/devices.controller');
 
 
 routerDevice.post('/requestotc', devicesControler.requestOTC);
+routerDevice.post('/register', devicesControler.register)
 
 
 export {
