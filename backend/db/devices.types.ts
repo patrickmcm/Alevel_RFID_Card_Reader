@@ -4,17 +4,15 @@ interface deviceSchema {
     otc: string,
     publicIP: string,
     psk: string,
-    registedUserUID: string,
-    registed: boolean,
+    registeredUserUID: string,
+    registered: boolean,
     lastHash: string
 }
 
 interface registerBody {
-    signature: string,
+    authKey?: string
     data: {
-        otc: string,
-        uid: string,
-        nonce: string,
+        otc: string
     }
 }
 

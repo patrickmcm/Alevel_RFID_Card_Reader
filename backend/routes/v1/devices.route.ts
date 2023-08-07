@@ -1,11 +1,14 @@
-const routerDevice = require('express').Router();
+import { Router } from "express";
+
+const routerDevice = Router();
 
 // controllers
-const devicesControler = require('../../controllers/devices.controller');
+import { requestOTC,registerDevice, getRegStatus } from "../../controllers/devices.controller";
 
 
-routerDevice.post('/requestotc', devicesControler.requestOTC);
-routerDevice.post('/register', devicesControler.registerDevice)
+routerDevice.post('/requestotc', requestOTC);
+routerDevice.post('/register', registerDevice)
+routerDevice.get('/regstatus',getRegStatus)
 
 
 export {

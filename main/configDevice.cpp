@@ -2,7 +2,14 @@
 
 SHA256 sha256;
 
+const String BASE_URL = "http://192.168.1.18:3000/";
+
 void setupDevice() {
+  if(checkRegStatus(0)) { return; }
+
+  WiFiClient client;
+  ESP8266WiFiSTAClass WiFi;
+  HTTPClient http;
   /*
   get code from http server but for now
 
@@ -14,10 +21,6 @@ void setupDevice() {
     - server checks with public key
   */
 
-  WiFiClient client;
-  ESP8266WiFiSTAClass WiFi;
-  HTTPClient http;
-
   int status = 0;
   int tries = 0;
   bool failed = false;
@@ -25,7 +28,7 @@ void setupDevice() {
   while (status != 200) {
     if (tries >= 5) {failed = true; break;}
 
-    http.begin(client, "http://192.168.1.18:3000/v1/devices/requestotc");
+    http.begin(client, BASE_URL +"v1/devices/requestotc");
 
     http.addHeader("Content-Type", "application/json");
 
@@ -51,10 +54,46 @@ void setupDevice() {
 
   if(!failed) {
     registerMessage(otc);
+    if(!checkRegStatus(600000)) {
+      setupDevice();
+    }
     return;
   }
 
-  showErrorMessage("Failed to connect to server, please try again later");
+  showErrorMessage("[63] ERR Failed to connect to server.");
+}
+
+bool checkRegStatus(int timeout){
+  WiFiClient client;
+  ESP8266WiFiSTAClass WiFi;
+  HTTPClient http;
+
+  bool registered = false;
+  unsigned long intialMillis = millis();
+  int tries = 0;
+
+  while (!registered && (millis() - intialMillis < timeout)) {
+    http.begin(client, BASE_URL+"v1/devices/regStatus?uid="+WiFi.macAddress());
+    int status = http.GET();
+
+    if(tries > 5) { break; }
+    if(status != 200) { tries++; continue; }
+
+    DynamicJsonDocument regStatBody(1024);
+
+    deserializeJson(regStatBody, http.getString());
+    
+    if(regStatBody["registered"]) { registered = true; }
+    
+    http.end();
+  }
+
+  if(!registered) {
+    if(tries > 5) { showErrorMessage("[92] ERR Failed to connect to server."); }
+    return false;
+  }
+
+  return true;
 }
 
 

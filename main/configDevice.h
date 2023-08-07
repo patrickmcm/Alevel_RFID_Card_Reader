@@ -13,4 +13,5 @@ void setupDevice();
 unsigned long getTime();
 String shaHmac(String data, String key);
 String buildBody(ESP8266WiFiSTAClass WiFi, unsigned long nonce, String key);
+bool checkRegStatus(int timeout);
 #endif

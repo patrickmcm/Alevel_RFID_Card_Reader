@@ -1,10 +1,11 @@
-const routerUser = require('express').Router();
+import { Router } from "express";
+
+const routerUser = Router();
 
 // controllers
-const usersController = require('../../controllers/users.controller');
+import { createUser } from "../../controllers/users.controller";
 
-routerUser.post('/create', usersController.createUser);
-
+routerUser.post('/', createUser);
 
 export {
     routerUser

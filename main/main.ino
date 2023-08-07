@@ -32,17 +32,15 @@ void setup() {
   setupDisplay();
   setupWifi();
   configTime(0,0,ntpServer);
-  if (EEPROM.read(110) == 0){
-    setupDevice();
-  }
+  setupDevice();
   setupRFID();
   EEPROM.end();
+
+  showDataOnDisplay("bro we ready");
 }
 
 void loop() {
-  String uid;
-  uid = getUID();
-  showDataOnDisplay(uid);
+  // make a heartbeat thing here
 
   delay(20);
 }

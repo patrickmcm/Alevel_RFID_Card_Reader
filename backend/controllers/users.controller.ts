@@ -51,7 +51,7 @@ async function createUser(req: Request, res: Response) {
             deviceUIDs: []
         }
 
-        res.json({
+        return res.json({
             success: true,
             error: null,
             data: {
@@ -59,8 +59,8 @@ async function createUser(req: Request, res: Response) {
             }
         })
     } catch(e: any) {
-        console.log(e)
-        res.json({
+        console.log(e.message)
+        return res.json({
             success: false,
             error: e.message
         })

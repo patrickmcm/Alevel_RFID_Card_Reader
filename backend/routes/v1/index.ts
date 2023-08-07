@@ -1,7 +1,7 @@
-import express from 'express'
+import { Router } from 'express'
 import { routerDevice } from './devices.route'
 import { routerUser } from './users.route';
-const router = express.Router();
+const router = Router();
 
 type routeList = {
     path: string,
