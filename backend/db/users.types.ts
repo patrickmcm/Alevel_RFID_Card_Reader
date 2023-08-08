@@ -1,9 +1,10 @@
-interface createUserBody {
+interface authUserBody {
     data: {
         email: string,
         password: string,
     }
 }
+
 
 interface userSchema {
     uid: string,
@@ -19,13 +20,14 @@ declare module "express-session" {
         data: {
             uid: string,
             email: string,
-            deviceUIDs: string[]
+            deviceUIDs: string[],
+            registered: Date
         }
     }
 }
 
 
 export {
-    createUserBody,
+    authUserBody,
     userSchema
 }
