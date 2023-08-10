@@ -1,6 +1,7 @@
-import express from 'express'
+import { Router } from 'express'
 import { routerDevice } from './devices.route'
-const router = express.Router();
+import { routerUser } from './users.route';
+const router = Router();
 
 type routeList = {
     path: string,
@@ -13,6 +14,10 @@ const defaultRoutes: routeList = [
         path: '/devices',
         route: routerDevice,
     },
+    {
+        path: '/users',
+        route: routerUser
+    }
 ];
 
 
