@@ -6,6 +6,8 @@ import getDB from '../db/connect';
 import generateOTC from '../utils/generateOTC';
 import { isValidNonce } from '../utils/validNonce';
 import { userSchema } from '../db/users.types';
+import ApiError from '../utils/apiError';
+
 
 /*
 TASK: SETUP BASIC SIGNING AND COMMUNICATION BETWEEN CLIENT-SERVER
@@ -29,9 +31,9 @@ async function registerDevice(req: Request, res: Response) {
         if(registerBody.authKey) {
             // do api key stuff
         } else if (!req.session.auth){
-            throw new Error("NO AUTH")
+            throw new ApiError(httpStatus.UNAUTHORIZED,"NO_AUTH")
         } else if (!req.session.data){
-            throw new Error("MAL_SESS")
+            throw new ApiError(httpStatus.BAD_REQUEST,"MAL_SESS")
         }
 
         // now auth
@@ -44,9 +46,9 @@ async function registerDevice(req: Request, res: Response) {
         })
 
         if(!device) {
-            throw new Error("BAD_CODE");
+            throw new ApiError(httpStatus.BAD_REQUEST,"BAD_CODE");
         } else if (device.registered){
-            throw new Error("ALR_REG")
+            throw new ApiError(httpStatus.CONFLICT,"ALR_REG")
         }
 
         await devices.updateOne({otc: registerBody.data.otc}, 
@@ -62,10 +64,16 @@ async function registerDevice(req: Request, res: Response) {
             success: true,
             error: null
         })
-    } catch(e: any) {
-        return res.status(httpStatus.BAD_REQUEST).json({
+    } catch (e: any) {
+        if(e instanceof ApiError) {
+            return res.status(e.statusCode).json({
+                success: false,
+                error: e.message
+            })
+        }
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
-            error: e.message
+            error: httpStatus[500]
         });
     }
 }
@@ -82,7 +90,7 @@ async function getRegStatus(req: Request, res:Response) {
         });
 
         if(!regCheckDevice){
-            throw new Error("NOT_FOUND")
+            throw new ApiError(httpStatus.NOT_FOUND,"NOT_FOUND")
         }
 
         console.log(`[+] ${deviceUID} is online!`)
@@ -92,12 +100,17 @@ async function getRegStatus(req: Request, res:Response) {
             registered: regCheckDevice.registered
         })
 
-    } catch(e: any){
-        console.log(e.message)
-        return res.json({
+    } catch (e: any) {
+        if(e instanceof ApiError) {
+            return res.status(e.statusCode).json({
+                success: false,
+                error: e.message
+            })
+        }
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
-            error: e.message
-        })
+            error: httpStatus[500]
+        });
     }
 
 }
@@ -109,7 +122,7 @@ async function requestOTC(req: Request, res: Response) {
     const ssid: string = req.body.data.ssid;
     // data has to be submitted in the same order everytime btw
     try {
-        if (!req.body.data.uid) { throw new Error("NULL_PARAM"); }; // expand this to make it clear which error
+        if (!req.body.data.uid) { throw new ApiError(httpStatus.BAD_REQUEST,"NULL_PARAM"); }; // expand this to make it clear which error
 
         const db = await getDB();
         const devices = db.collection<deviceSchema>("devices");
@@ -120,10 +133,10 @@ async function requestOTC(req: Request, res: Response) {
         });
 
         const serverTimestamp = Math.round(Date.now() / 1000);
-        if (!deviceForConfirmation) { throw new Error("NO_RECORD"); }; // check it actually exists
-        if (!isValidNonce(nonce)) { throw new Error("INVLD_NONCE") } // check if valid nonce
-        if ((serverTimestamp - clientTimestamp) > 10) { throw new Error("TIMEOUT"); } // only accept 5s delay
-        if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data) + nonce) !== signature) { throw new Error("BAD_SIG"); }; // verify signature
+        if (!deviceForConfirmation) { throw new ApiError(httpStatus.NOT_FOUND,"NO_RECORD"); }; // check it actually exists
+        if (!isValidNonce(nonce)) { throw new ApiError(httpStatus.BAD_REQUEST,"INVLD_NONCE") } // check if valid nonce
+        if ((serverTimestamp - clientTimestamp) > 10) { throw new ApiError(httpStatus.REQUEST_TIMEOUT,"TIMEOUT"); } // only accept 5s delay
+        if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data) + nonce) !== signature) { throw new ApiError(httpStatus.BAD_REQUEST,"BAD_SIG"); }; // verify signature
 
         const otc = await generateOTC(devices);
 
@@ -136,7 +149,7 @@ async function requestOTC(req: Request, res: Response) {
         });
 
         // why i do this is to let the ssid & ip be updated IF they have switched wifi's 
-        if (deviceForConfirmation.registered) { throw new Error("ALREADY_REGISTED"); }; // checks if registerd
+        if (deviceForConfirmation.registered) { throw new ApiError(httpStatus.CONFLICT,httpStatus['409_MESSAGE']); }; // checks if registerd
 
         return res.json({
             success: true,
@@ -144,11 +157,17 @@ async function requestOTC(req: Request, res: Response) {
             otc: otc
         });
     } catch (e: any) {
-        // please do nice formatting maybe if you have time??
-        console.log(`[!] Device ${req.body.data.uid} failed request for OTC because ${e.message}`);
-        return res.status(httpStatus.BAD_REQUEST).json({
+        if(e instanceof ApiError) {
+            console.log(`[!] Device ${req.body.data.uid || "NO_UID"} failed request for OTC because ${e.message}`);
+            return res.status(e.statusCode).json({
+                success: false,
+                error: e.message
+            })
+        }
+        console.log(`[!] Device ${req.body.data.uid || "NO_UID"} failed request for OTC because ${e.message}`);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
-            error: e.message
+            error: httpStatus[500]
         });
     }
 }
