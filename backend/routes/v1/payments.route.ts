@@ -1,14 +1,13 @@
 import { Router } from "express";
+import { createPayment } from "../../controllers/payments.controller";
 
 const routerPayments = Router();
 
 // controllers
-import { requestOTC,registerDevice, getRegStatus } from "../../controllers/devices.controller";
 
 
-routerDevice.post('/requestotc', requestOTC);
-routerDevice.post('/register', registerDevice)
-routerDevice.get('/regstatus',getRegStatus)
+
+routerPayments.post('/payment',createPayment);
 
 
 export {

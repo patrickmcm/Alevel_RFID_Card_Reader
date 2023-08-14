@@ -85,6 +85,8 @@ async function getRegStatus(req: Request, res:Response) {
             throw new Error("NOT_FOUND")
         }
 
+        console.log(`[+] ${deviceUID} is online!`)
+
         return res.json({
             success: true,
             registered: regCheckDevice.registered
@@ -122,7 +124,6 @@ async function requestOTC(req: Request, res: Response) {
         if (!isValidNonce(nonce)) { throw new Error("INVLD_NONCE") } // check if valid nonce
         if ((serverTimestamp - clientTimestamp) > 10) { throw new Error("TIMEOUT"); } // only accept 5s delay
         if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data) + nonce) !== signature) { throw new Error("BAD_SIG"); }; // verify signature
-        if (deviceForConfirmation.registered) { throw new Error("ALREADY_REGISTED"); }; // checks if registerd
 
         const otc = await generateOTC(devices);
 
@@ -133,6 +134,9 @@ async function requestOTC(req: Request, res: Response) {
                 otc: otc
             }
         });
+
+        // why i do this is to let the ssid & ip be updated IF they have switched wifi's 
+        if (deviceForConfirmation.registered) { throw new Error("ALREADY_REGISTED"); }; // checks if registerd
 
         return res.json({
             success: true,

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 
 
 function createPayment(req: Request, res: Response) {
+
+    res.send(req.body)
     /* 
     create payment in db then emit an event for a websocket to handle it and send to client
 
@@ -17,4 +19,8 @@ function createPayment(req: Request, res: Response) {
         fix the error handling man 😭😭, rn its just the same status code for everything which is so confusing
     */
 
+}
+
+export {
+    createPayment
 }

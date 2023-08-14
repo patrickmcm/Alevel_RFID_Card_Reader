@@ -2,10 +2,9 @@
 
 SHA256 sha256;
 
-const String BASE_URL = "http://192.168.1.18:3000/";
+const String BASE_URL = "http://192.168.178.23:3000/";
 
 void setupDevice() {
-  if(checkRegStatus(0)) { return; }
 
   WiFiClient client;
   ESP8266WiFiSTAClass WiFi;
@@ -24,9 +23,11 @@ void setupDevice() {
   int status = 0;
   int tries = 0;
   bool failed = false;
+  bool registered = false;
   int otc = 0;
   while (status != 200) {
     if (tries >= 5) {failed = true; break;}
+    delay(1000);
 
     http.begin(client, BASE_URL +"v1/devices/requestotc");
 
@@ -36,6 +37,8 @@ void setupDevice() {
 
     status = http.POST(reqBody);
 
+    
+    if(checkRegStatus(1000)) { break; registered = true;}
     if (status != 200 ) {
       Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(status).c_str());
       http.end();
@@ -52,15 +55,18 @@ void setupDevice() {
     http.end();
   }
 
+  if(registered) { return; }
+
   if(!failed) {
-    registerMessage(otc);
     if(!checkRegStatus(600000)) {
       setupDevice();
     }
+    registerMessage(otc);
     return;
   }
 
-  showErrorMessage("[63] ERR Failed to connect to server.");
+  showErrorMessage("[63] ERR Failed to connect to server. Restart.");
+  delay(10000000000000000);
 }
 
 bool checkRegStatus(int timeout){
@@ -83,7 +89,7 @@ bool checkRegStatus(int timeout){
 
     deserializeJson(regStatBody, http.getString());
     
-    if(regStatBody["registered"]) { registered = true; }
+    if(regStatBody["registered"]) { registered = true; break; }
     
     http.end();
   }
