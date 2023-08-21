@@ -9,7 +9,8 @@ const app = express();
 
 
 // routes
-import {router} from './routes/v1/index'
+import { apiRouterv1 } from './routes/v1/index'
+import { dashRouter } from './routes/dashboard';
 
 // middlewares
 
@@ -36,7 +37,8 @@ app.use(express.json());
 app.use(session(sess))
 
 
-app.use('/v1', router);
+app.use('/v1', apiRouterv1);
+app.use('/',dashRouter)
 
 
 const port = process.env.PORT || 3000;

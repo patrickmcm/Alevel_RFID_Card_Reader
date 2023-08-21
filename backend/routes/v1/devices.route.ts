@@ -3,7 +3,7 @@ import { Router } from "express";
 const routerDevice = Router();
 
 // controllers
-import { requestOTC,registerDevice, getRegStatus } from "../../controllers/devices.controller";
+import { requestOTC,registerDevice, getRegStatus } from "../../controllers/v1/devices.controller";
 
 
 routerDevice.post('/requestotc', requestOTC);

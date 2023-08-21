@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { routerDevice } from './devices.route'
 import { routerUser } from './users.route';
-const router = Router();
+const apiRouterv1 = Router();
 
 type routeList = {
     path: string,
@@ -22,9 +22,9 @@ const defaultRoutes: routeList = [
 
 
 defaultRoutes.forEach(defaultRoutes => {
-    router.use(defaultRoutes.path, defaultRoutes.route);
+    apiRouterv1.use(defaultRoutes.path, defaultRoutes.route);
 });
 
 export {
-    router
+    apiRouterv1
 };
