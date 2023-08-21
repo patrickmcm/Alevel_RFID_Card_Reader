@@ -5,7 +5,7 @@ backend/.vscode
 frontend/.vscode
 frontend/node_modules
 frontend/dist
-frontend/vendor
+frontend/vendors
 
 backend/config.ts
 .vscode/

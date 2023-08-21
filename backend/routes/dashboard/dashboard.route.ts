@@ -1,14 +1,16 @@
 import { Router } from "express";
+import { renderDashboard, renderDevices, renderTransactions, renderUsers } from "../../controllers/dashboard/dashboard.controller";
 
 const routerDashboard = Router();
 
 // controllers
-import { requestOTC,registerDevice, getRegStatus } from "../../controllers/v1/devices.controller";
 
 
-routerDashboard.post('/requestotc', requestOTC);
-routerDashboard.post('/register', registerDevice)
-routerDashboard.get('/regstatus',getRegStatus)
+
+routerDashboard.get('/', renderDashboard);
+routerDashboard.get('/devices', renderDevices)
+routerDashboard.get('/transactions',renderTransactions)
+routerDashboard.get('/users',renderUsers)
 
 
 export {
