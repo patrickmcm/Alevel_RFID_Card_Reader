@@ -392,9 +392,20 @@ gulp.task('build', gulp.series('bundleVendors', function() {
         .pipe(gulp.dest('./dist/pages'));
     var moveVendors = gulp.src(['./vendors/**/*'])
         .pipe(gulp.dest('./dist/vendors'));
-    var moveHtml = gulp.src(['./index.html'])
+
+    var renameHtmlPages = gulp.src(['./pages/**/*.html'])
+        .pipe(rename(function (path) {
+            path.extname = ".ejs";
+        }))
+        .pipe(gulp.dest('./dist/pages'));
+
+    var renameHtml = gulp.src(['./index.html'])
+        .pipe(rename(function (path) {
+            path.extname = ".ejs";
+        }))
         .pipe(gulp.dest('./dist'));
-    return merge(moveCss, moveJs, moveFonts, moveImages, movePages, moveVendors, moveHtml);
+
+    return merge(moveCss, moveJs, moveFonts, moveImages, movePages, moveVendors,renameHtml, renameHtmlPages);
 }));
 
 gulp.task('default', gulp.series('serve'));
