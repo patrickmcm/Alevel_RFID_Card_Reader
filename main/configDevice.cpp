@@ -58,10 +58,10 @@ void setupDevice() {
   if(registered) { return; }
 
   if(!failed) {
+    registerMessage(otc);
     if(!checkRegStatus(600000)) {
       setupDevice();
     }
-    registerMessage(otc);
     return;
   }
 
@@ -69,6 +69,7 @@ void setupDevice() {
   delay(10000000000000000);
 }
 
+// this function checks for the amount if time in timout, not every x seconds
 bool checkRegStatus(int timeout){
   WiFiClient client;
   ESP8266WiFiSTAClass WiFi;
@@ -92,6 +93,7 @@ bool checkRegStatus(int timeout){
     if(regStatBody["registered"]) { registered = true; break; }
     
     http.end();
+    delay(1000);
   }
 
   if(!registered) {

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import {deviceSchema, registerBody}  from '../../db/devices.types';
+import {deviceSchema, registerBody}  from '../../db/devices';
 import hmac from '../../utils/hmac';
 import httpStatus from 'http-status';
 import getDB from '../../db/connect';
 import generateOTC from '../../utils/generateOTC';
 import { isValidNonce } from '../../utils/validNonce';
-import { userSchema } from '../../db/users.types';
+import { userSchema } from '../../db/users';
 import ApiError from '../../utils/apiError';
 
 
@@ -45,6 +45,11 @@ async function registerDevice(req: Request, res: Response) {
             otc: registerBody.data.otc
         })
 
+        // check if data.location and data.name are present, if not throw ApiError
+        if(!registerBody.data.name || !registerBody.data.location) {
+            throw new ApiError(httpStatus.BAD_REQUEST,"NULL_PARAMS");
+        }
+
         if(!device) {
             throw new ApiError(httpStatus.BAD_REQUEST,"BAD_CODE");
         } else if (device.registered){
@@ -52,7 +57,7 @@ async function registerDevice(req: Request, res: Response) {
         }
 
         await devices.updateOne({otc: registerBody.data.otc}, 
-            {$set: {registered: true,registeredUserUID: req.session.data?.uid}
+            {$set: {registered: true,registeredUserUID: req.session.data?.uid, location: registerBody.data.location, name: registerBody.data.name}
         })
 
         users.updateOne(
@@ -81,6 +86,7 @@ async function registerDevice(req: Request, res: Response) {
 async function getRegStatus(req: Request, res:Response) {
     const deviceUID = req.query.uid;
     try {
+        req.session.destroy(() => {})
         const db = await getDB();
         const devices = db.collection<deviceSchema>("devices");
 
@@ -93,8 +99,7 @@ async function getRegStatus(req: Request, res:Response) {
             throw new ApiError(httpStatus.NOT_FOUND,"NOT_FOUND")
         }
 
-        console.log(`[+] ${deviceUID} is online!`)
-
+        
         return res.json({
             success: true,
             registered: regCheckDevice.registered

@@ -34,10 +34,10 @@
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="index.html">
+          <a class="navbar-brand brand-logo" href="/">
             <img src="images/logo.svg" alt="logo" />
           </a>
-          <a class="navbar-brand brand-logo-mini" href="index.html">
+          <a class="navbar-brand brand-logo-mini" href="/">
             <img src="images/logo-mini.svg" alt="logo" />
           </a>
         </div>
@@ -46,9 +46,7 @@
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">
-              <% if (data) { %>
-                <%= data.name %>
-              <% } %>
+              <%= data.username %>
             </span></h1>
             <h3 class="welcome-sub-text">Your performance summary this week </h3>
           </li>
@@ -60,12 +58,12 @@
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
                 <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
-                <p class="mb-1 mt-3 font-weight-semibold">Loading...</p>
-                <p class="fw-light text-muted mb-0">Loading...</p>
+                <p class="mb-1 mt-3 font-weight-semibold"><%= data.username %></p>
+                <p class="fw-light text-muted mb-0"><%= data.email %></p>
               </div>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile </a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-              <a class="dropdown-item" href="./pages/login.html"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+              <a class="dropdown-item" href="/v1/users/logout"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
             </div>
           </li>
         </ul>
@@ -81,25 +79,25 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="/">
               <i class="mdi mdi-grid-large menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/devices.html">
+            <a class="nav-link" href="/devices">
               <i class="mdi mdi-cellphone-link menu-icon"></i>
               <span class="menu-title">Devices</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/transactions.html">
+            <a class="nav-link" href="/transactions">
               <i class="mdi mdi-cash menu-icon"></i>
               <span class="menu-title">Transactions</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/users.html">
+            <a class="nav-link" href="/users">
               <i class="mdi mdi-account-group menu-icon"></i>
               <span class="menu-title">Users</span>
             </a>

@@ -1,7 +1,7 @@
 interface authUserBody {
     data: {
         email: string,
-        name: string
+        username: string
         password: string,
     }
 }
@@ -13,7 +13,7 @@ interface userSchema {
     email: string,
     password: string
     registered: Date,
-    name: string
+    username: string
 }
 
 declare module "express-session" {
@@ -24,7 +24,7 @@ declare module "express-session" {
             email: string,
             deviceUIDs: string[],
             registered: Date,
-            name: string
+            username: string
         }
     }
 }

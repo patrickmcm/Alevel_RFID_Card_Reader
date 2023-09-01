@@ -244,7 +244,9 @@ gulp.task('copyAddonsScripts', function() {
         .pipe(gulp.dest('./vendors/tinymce'));
     var aScript71 = gulp.src(['./node_modules/bootstrap-table/dist/bootstrap-table.min.js'])
         .pipe(gulp.dest('./vendors/bootstrap-table'));
-    return merge(aScript1, aScript2, aScript3, aScript4, aScript5, aScript16, aScript18, aScript19, aScript20, aScript21, aScript22, aScript23, aScript24, aScript25, aScript26  , aScript27, aScript28, aScript29, aScript30, aScript31, aScript32, aScript33, aScript34, aScript35, aScript36, aScript37, aScript38, aScript39, aScript40, aScript41, aScript42, aScript43, aScript44, aScript45, aScript46, aScript60, aScript61, aScript64, aScript65, aScript66, aScript67, aScript68, aScript69, aScript70, aScript71);
+    var aScript72 = gulp.src(['./node_modules/sweetalert2/dist/sweetalert2.all.min.js'])
+        .pipe(gulp.dest('./vendors/sweetalert2'));
+    return merge(aScript1, aScript2, aScript3, aScript4, aScript5, aScript16, aScript18, aScript19, aScript20, aScript21, aScript22, aScript23, aScript24, aScript25, aScript26  , aScript27, aScript28, aScript29, aScript30, aScript31, aScript32, aScript33, aScript34, aScript35, aScript36, aScript37, aScript38, aScript39, aScript40, aScript41, aScript42, aScript43, aScript44, aScript45, aScript46, aScript60, aScript61, aScript64, aScript65, aScript66, aScript67, aScript68, aScript69, aScript70, aScript71,aScript72);
 });
 
 

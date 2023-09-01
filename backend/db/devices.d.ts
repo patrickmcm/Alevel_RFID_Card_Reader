@@ -1,6 +1,8 @@
 interface deviceSchema {
     ssid: string,
     deviceUID: string,
+    name: string,
+    location: string,
     otc: string,
     publicIP: string,
     psk: string,
@@ -12,7 +14,9 @@ interface deviceSchema {
 interface registerBody {
     authKey?: string
     data: {
-        otc: string
+        otc: string,
+        name: string,
+        location: string
     }
 }
 

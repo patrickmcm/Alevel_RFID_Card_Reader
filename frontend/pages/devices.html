@@ -44,7 +44,9 @@
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">John Doe</span></h1>
+            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">
+              <%= data.username %>
+            </span></h1>
             <h3 class="welcome-sub-text">Manage your devices </h3>
           </li>
         </ul>
@@ -55,12 +57,12 @@
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
                 <img class="img-md rounded-circle" src="../images/faces/face8.jpg" alt="Profile image">
-                <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-                <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                <p class="mb-1 mt-3 font-weight-semibold"><%= data.username %></p>
+                <p class="fw-light text-muted mb-0"><%= data.email %></p>
               </div>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile</a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-              <a class="dropdown-item border-bottom-0"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+              <a class="dropdown-item" href="/v1/users/logout"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
             </div>
           </li>
         </ul>
@@ -77,25 +79,25 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="../index.html">
+            <a class="nav-link" href="/">
               <i class="mdi mdi-grid-large menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="devices.html">
+            <a class="nav-link" href="/devices">
               <i class="mdi mdi-cellphone-link menu-icon"></i>
               <span class="menu-title">Devices</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="transactions.html">
+            <a class="nav-link" href="/transactions">
               <i class="mdi mdi-cash menu-icon"></i>
               <span class="menu-title">Transactions</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="users.html">
+            <a class="nav-link" href="/users">
               <i class="mdi mdi-account-group menu-icon"></i>
               <span class="menu-title">Users</span>
             </a>
@@ -122,7 +124,7 @@
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="forms-sample" id="addDeviceForm">
+                                <form class="forms-sample" id="addDeviceForm" action="/v1/devices/register">
                                     <div class="form-group">
                                         <label for="deviceName">Name</label>
                                         <input type="text" class="form-control p-input" id="deviceName" aria-describedby="deviceNameHelp" placeholder="Enter Device Name">
@@ -205,7 +207,7 @@
   <!-- container-scroller -->
   <!-- plugins:js -->
   <script src="../vendors/js/vendor.bundle.base.js"></script>
-  <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+  <script src="../vendors/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
   <script src="../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>

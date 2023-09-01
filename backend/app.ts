@@ -35,13 +35,14 @@ if(app.get('env') == 'prod') {
 
 app.use(express.json());
 app.use(session(sess))
+
 app.set('view engine', 'ejs')
 app.set('views', __dirname+'\\public')
 
 
 app.use('/v1', apiRouterv1);
 app.use('/',dashRouter)
-app.use(express.static('public'))
+app.use(express.static('public',{etag:false}))
 
 
 const port = process.env.PORT || 3000;

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authUserBody, userSchema } from '../../db/users.types';
+import { authUserBody, userSchema } from '../../db/users';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt'
 import getDB from '../../db/connect';
@@ -17,6 +17,7 @@ createUser, getUser
 
 async function createUser(req: Request, res: Response) {
     const body: authUserBody = req.body;
+    console.log(body)
     try {
         if (req.session.auth){
             throw new ApiError(httpStatus.FORBIDDEN,"LOGGED_IN")
@@ -45,7 +46,7 @@ async function createUser(req: Request, res: Response) {
             deviceUIDs: [],
             password: await bcrypt.hash(body.data.password,config.app.saltRounds),
             registered: regDate,
-            name: body.data.name
+            username: body.data.username
         })
 
         
@@ -55,7 +56,7 @@ async function createUser(req: Request, res: Response) {
             email: body.data.email,
             deviceUIDs: [],
             registered: regDate,
-            name: body.data.name
+            username: body.data.username
         }
 
         return res.json({
@@ -83,6 +84,10 @@ async function loginUser(req: Request, res: Response) {
     const loginUserBody: authUserBody = req.body
 
     try {
+        if (req.session.auth){
+            throw new ApiError(httpStatus.FORBIDDEN,"LOGGED_IN")
+        }
+
         const db = getDB();
         const users = db.collection<userSchema>('users');
         const user = await users.findOne({email: loginUserBody.data.email})
@@ -94,7 +99,7 @@ async function loginUser(req: Request, res: Response) {
         if(!compareResult) { throw new ApiError(httpStatus.UNAUTHORIZED,"BAD_PASS"); }
 
         req.session.auth = true
-        req.session.data = _.pick(user,['uid','deviceUIDs','email','registered','name'])
+        req.session.data = _.pick(user,['uid','deviceUIDs','email','registered','username'])
         return res.json({
             success: true,
             error: null
@@ -113,7 +118,14 @@ async function loginUser(req: Request, res: Response) {
     }
 }
 
+function logoutUser(req: Request,res: Response) {
+    req.session.destroy(() => {
+        res.redirect('/login')
+    })
+}
+
 export {
     createUser,
-    loginUser
+    loginUser,
+    logoutUser
 }
