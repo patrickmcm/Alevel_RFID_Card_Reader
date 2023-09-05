@@ -109,30 +109,18 @@
                                     </div>
                                     <div class="list-wrapper">
                                       <ul id="devicesList">
-                                        <li class="d-block">
-                                          <span class="badge badge-success">Online</span>
-                                          <div class="p-2">
-                                            Device 1 name
-                                          </div>
-                                        </li>
-                                        <li class="d-block">
-                                          <span class="badge badge-danger">Offline</span>
-                                          <div class="p-2">
-                                            Device 2 name
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <span class="badge badge-success">Online</span>
-                                          <div class="p-2">
-                                            Device 3 name
-                                          </div>
-                                        </li>
-                                        <li class="border-bottom-0">
-                                          <span class="badge badge-success">Online</span>
-                                          <div class="p-2">
-                                            Device 4 name
-                                          </div>
-                                        </li>
+                                        <%- 
+                                        devices.map(function(device) {
+                                            return `
+                                              <li class="d-block">
+                                                <span class="badge badge-success">Online</span>
+                                                <div class="p-2">
+                                                  ${device.name}
+                                                </div>
+                                              </li>
+                                            `
+                                        }).join('')
+                                          %>
                                       </ul>
                                     </div>
                                   </div>

@@ -3,10 +3,26 @@ import getDB from '../../db/connect';
 import { deviceSchema } from '../../db/devices';
 import _ from 'lodash';
 
-function renderDashboard(req: Request, res: Response) {
+async function renderDashboard(req: Request, res: Response) {
     if(!req.session.auth) return res.redirect('/login')
 
-    res.render('index',req.session)
+    let userDevices: object[] = []
+    try{
+        const db = getDB();
+        const devices = db.collection<deviceSchema>('devices');
+
+        const userDevicesCursor = devices.find<deviceSchema>({
+            registeredUserUID: req.session.data?.uid
+        })
+        
+        for await (const doc of userDevicesCursor) {
+            userDevices.push(_.omit(doc,['_id']));
+        } 
+    } catch(e) {
+        userDevices.push({err:true})
+    }
+
+    res.render('index',{data:req.session, devices: userDevices})
 }
 
 async function renderDevices(req: Request, res: Response) {
