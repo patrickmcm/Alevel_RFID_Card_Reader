@@ -392,6 +392,8 @@ gulp.task('build', gulp.series('bundleVendors', function() {
         .pipe(gulp.dest('./dist/images'));
     var movePages = gulp.src(['./pages/**/*'])
         .pipe(gulp.dest('./dist/pages'));
+    var movePartials = gulp.src(['./partials/**/*'])
+        .pipe(gulp.dest('./dist/partials'));
     var moveVendors = gulp.src(['./vendors/**/*'])
         .pipe(gulp.dest('./dist/vendors'));
 
@@ -401,13 +403,19 @@ gulp.task('build', gulp.series('bundleVendors', function() {
         }))
         .pipe(gulp.dest('./dist/pages'));
 
+    var renameHtmlPartials = gulp.src(['./partials/**/*.html'])
+        .pipe(rename(function (path) {
+            path.extname = ".ejs";
+        }))
+        .pipe(gulp.dest('./dist/partials'));
+
     var renameHtml = gulp.src(['./index.html'])
         .pipe(rename(function (path) {
             path.extname = ".ejs";
         }))
         .pipe(gulp.dest('./dist'));
 
-    return merge(moveCss, moveJs, moveFonts, moveImages, movePages, moveVendors,renameHtml, renameHtmlPages);
+    return merge(renameHtml, renameHtmlPages, movePartials, renameHtmlPartials,moveCss, moveJs, moveFonts, moveImages, movePages, moveVendors);
 }));
 
 gulp.task('default', gulp.series('serve'));
