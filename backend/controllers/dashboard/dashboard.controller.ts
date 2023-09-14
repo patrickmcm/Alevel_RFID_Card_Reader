@@ -22,7 +22,7 @@ async function renderDashboard(req: Request, res: Response) {
         userDevices.push({err:true})
     }
 
-    res.render('index',{data:req.session, devices: userDevices})
+    res.render('index',{session:req.session, devices: userDevices})
 }
 
 async function renderDevices(req: Request, res: Response) {
@@ -45,20 +45,20 @@ async function renderDevices(req: Request, res: Response) {
     }
 
 
-    res.render('pages/devices',{data:req.session, devices:userDevices})
+    res.render('pages/devices',{session:req.session, devices:userDevices})
 }
 
 
 function renderTransactions(req: Request, res: Response) {
     if(!req.session.auth) return res.redirect('/login')
 
-    res.render('pages/transactions',req.session)
+    res.render('pages/transactions', {session: req.session})
 }
 
 function renderUsers(req: Request, res: Response) {
     if(!req.session.auth) return res.redirect('/login')
 
-    res.render('pages/users', req.session)
+    res.render('pages/users', {session: req.session})
 }
 
 function renderLogin(req: Request, res: Response){
