@@ -36,7 +36,7 @@ void setup() {
   setupRFID();
   EEPROM.end();
 
-  showDataOnDisplay("place holder for loop",1);
+  showDataOnDisplay("place holder for loop",3);
 }
 
 void loop() {

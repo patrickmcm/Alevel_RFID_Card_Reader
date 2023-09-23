@@ -63,10 +63,10 @@ void setupWifiMessage() {
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(ILI9341_WHITE);
 
-  tft.setCursor(75, 94);
-  tft.setTextSize(2);
+  tft.setCursor(25, 90);
+  tft.setTextSize(3);
   tft.println("Connect to this");
-  tft.setCursor(82, 112);
+  tft.setCursor(43, 126);
   tft.println("device's WiFi");
 }
 
