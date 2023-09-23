@@ -11,12 +11,12 @@ void setupDisplay() {
   tft.setRotation(1);
 }
 
-void showDataOnDisplay(String uid) {
+void showDataOnDisplay(String uid, uint8_t size) {
 
   tft.fillScreen(ILI9341_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(5);
+  tft.setTextSize(size);
   tft.println(uid);
 }
 
@@ -41,9 +41,22 @@ void displayStartupConnection() {
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(ILI9341_WHITE);
 
-  tft.setCursor(43,108);
+  tft.setCursor(43,90);
   tft.setTextSize(3);
-  tft.println("Connecting...");
+  tft.println("Connecting to");
+  tft.setCursor(106, 126);
+  tft.println("WiFi...");
+}
+
+void displayRegisterServer() {
+  tft.fillScreen(ILI9341_BLACK);
+  tft.setTextColor(ILI9341_WHITE);
+
+  tft.setCursor(16,90);
+  tft.setTextSize(3);
+  tft.println("Registering with");
+  tft.setCursor(79, 126);
+  tft.println("server...");
 }
 
 void setupWifiMessage() {

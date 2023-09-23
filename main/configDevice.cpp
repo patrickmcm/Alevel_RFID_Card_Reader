@@ -5,6 +5,7 @@ SHA256 sha256;
 const String BASE_URL = "http://192.168.178.23:3000/";
 
 void setupDevice() {
+  displayRegisterServer();
 
   WiFiClient client;
   ESP8266WiFiSTAClass WiFi;
