@@ -8,6 +8,8 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
+const String BASE_URL = "http://192.168.178.23:3000/";
+
 
 void setupDevice();
 unsigned long getTime();

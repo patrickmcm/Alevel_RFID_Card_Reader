@@ -2,9 +2,9 @@
 #include "RFIDFunctions.h"
 #include "WIFIFunctions.h"
 #include "configDevice.h"
+#include "webSockets.h"
 #include <EEPROM.h>
 #include <time.h>
-
 /*
 GOALS:
 1. Make handshake (including backend)
@@ -22,7 +22,6 @@ NOTES:
  - E.G. SETTEXTSIZE(3) IS 18X24 PIXELS
 
 */
-
 const char* ntpServer = "pool.ntp.org";
 unsigned long epochTime;
 
@@ -42,5 +41,8 @@ void setup() {
 void loop() {
   // make a heartbeat thing here
 
-  delay(20);
+
+
+
+
 }

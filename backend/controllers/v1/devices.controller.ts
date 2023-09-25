@@ -7,6 +7,9 @@ import generateOTC from '../../utils/generateOTC';
 import { isValidNonce } from '../../utils/validNonce';
 import { userSchema } from '../../db/users';
 import ApiError from '../../utils/apiError';
+import { IncomingMessage } from 'http';
+import { wsServer } from '../../app';
+import { WebSocket } from "ws";
 
 
 /*
@@ -177,11 +180,33 @@ async function requestOTC(req: Request, res: Response) {
     }
 }
 
+async function heartbeat(socket:WebSocket,request:IncomingMessage) {
+    // we have already authenticated the device here so have confidence in the data recieved
+    wsServer.on('error', console.error)
+
+    socket.on('message', (message:Buffer) => {
+        let msg = "";
+        for (let index = 0; index < message.length; index++) {
+            msg += String.fromCharCode(message[index])
+        }
+        console.log(msg)
+    })
+
+    socket.on('close', () => {
+        console.log("client disconnected")
+        console.log("their data: ")
+        console.log(request.headers)
+    })
+
+}
+
+
 
 
 
 export {
     requestOTC,
     registerDevice,
-    getRegStatus
+    getRegStatus,
+    heartbeat
 };
