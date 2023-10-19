@@ -1,6 +1,18 @@
 #include "configDevice.h"
 
-SHA256 sha256;
+ATECCX08A atecc;
+
+void setupATECC508A(){
+  Wire.begin();
+
+  if (atecc.begin() == true) {
+    Serial.println("Device connected");
+  } else {
+    Serial.println("Error while connecting to crypto IC");
+    //showErrorMessage("[12] ERR Crypto IC not connected");
+    delay(10000000000000);
+  }
+}
 
 void setupDevice() {
   displayRegisterServer();
@@ -31,8 +43,9 @@ void setupDevice() {
     http.begin(client, BASE_URL +"v1/devices/requestotc");
 
     http.addHeader("Content-Type", "application/json");
-
-    String reqBody = buildBody(WiFi,getTime(), "2555885553752669D66245EBE549B");
+    
+    int nonce = atecc.getRandomInt();
+    String reqBody = buildBody(WiFi,getTime(),nonce);
 
     status = http.POST(reqBody);
 
@@ -115,47 +128,41 @@ unsigned long getTime() {
   return now;
 }
 
-
-String shaHmac(String data, String key) {
-  uint8_t result[32];
-  
-  // Convert the key and data to const char* before passing to strlen()
-  const char* keyChars = key.c_str();
-  const char* dataChars = data.c_str();
-
-  SHA256 sha256;
-  sha256.resetHMAC(keyChars, strlen(keyChars));
-  sha256.update(dataChars, strlen(dataChars));
-  sha256.finalizeHMAC(keyChars, strlen(keyChars), result, sizeof(result));
-
-  char hash[65]; // 2 characters per byte + 1 for null terminator
-
-  // Convert the byte array to a hexadecimal string
-  for (int i = 0; i < 32; i++) {
-    sprintf(&hash[i * 2], "%02x", result[i]);
-  }
-  hash[64] = '\0'; // Null-terminate the string
-
-  return String(hash);
-}
-
-String buildBody(ESP8266WiFiSTAClass WiFi, unsigned long nonce, String key){
+String buildBody(ESP8266WiFiSTAClass WiFi, unsigned long timestamp,int nonce){
   DynamicJsonDocument doc(1024);
 
-  unsigned long epochTime = nonce; // change
+  unsigned long epochTime = timestamp; // change
 
   JsonObject dataObj = doc.createNestedObject("data");
   dataObj["uid"] = WiFi.macAddress();
   dataObj["ssid"] = WiFi.SSID();
   dataObj["timestamp"] = epochTime;
-  dataObj["nonce"] = epochTime;
+  dataObj["nonce"] = nonce;
   String jsonDoc;
   serializeJson(dataObj,jsonDoc);
-  
-  doc["signature"] = shaHmac(jsonDoc+nonce,key);
+
+  // need here to convert jsonDoc into a uint8_t byte array for jsonDocBytes
+  uint8_t jsonDocBytes[jsonDoc.length() + 1]; // +1 for the null terminator
+  jsonDoc.getBytes(jsonDocBytes, jsonDoc.length() + 1);
+
+  uint8_t jsonInternalHash[32];
+  atecc.hmac(jsonDocBytes, sizeof(jsonDocBytes), 0x000, jsonInternalHash);
+
+  String signature = "";
+  for(int i = 0; i< sizeof(jsonInternalHash); i++){
+    if(jsonInternalHash[i] < 0x10) {Serial.print("0");}
+    Serial.print(jsonInternalHash[i],HEX);
+    char hexBuffer[3]; // Two characters for the byte and one for the null terminator
+    snprintf(hexBuffer, sizeof(hexBuffer), "%02X", jsonInternalHash[i]);
+    signature += hexBuffer;
+  }
+
+  doc["signature"] = signature;
 
   String finalDoc;
   serializeJson(doc,finalDoc);
+
+  delete[] jsonDocBytes;
 
   return finalDoc;
 }

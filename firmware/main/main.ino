@@ -28,6 +28,7 @@ unsigned long epochTime;
 void setup() {
   Serial.begin(115200);
   EEPROM.begin(1024);
+  setupATECC508A();
   setupDisplay();
   setupWifi();
   configTime(0,0,ntpServer);

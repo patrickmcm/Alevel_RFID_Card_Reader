@@ -140,11 +140,16 @@ async function requestOTC(req: Request, res: Response) {
             deviceUID: req.body.data.uid
         });
 
+        
+
         const serverTimestamp = Math.round(Date.now() / 1000);
         if (!deviceForConfirmation) { throw new ApiError(httpStatus.NOT_FOUND,"NO_RECORD"); }; // check it actually exists
         if (!isValidNonce(nonce)) { throw new ApiError(httpStatus.BAD_REQUEST,"INVLD_NONCE") } // check if valid nonce
+        console.log("recieved body:\n"+JSON.stringify(req.body))
+        console.log("recieved signature:\n"+req.body.signature)
+        console.log("expeceted signature\n"+hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data)))
         if ((serverTimestamp - clientTimestamp) > 10) { throw new ApiError(httpStatus.REQUEST_TIMEOUT,"TIMEOUT"); } // only accept 5s delay
-        if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data) + nonce) !== signature) { throw new ApiError(httpStatus.BAD_REQUEST,"BAD_SIG"); }; // verify signature
+        if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data)) !== signature) { throw new ApiError(httpStatus.BAD_REQUEST,"BAD_SIG"); }; // verify signature
 
         const otc = await generateOTC(devices);
 

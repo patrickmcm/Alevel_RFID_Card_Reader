@@ -4,7 +4,6 @@
 ATECCX08A atecc;
 
 void setup() {
-  // put your setup code here, to run once:
   Wire.begin();
   Serial.begin(115200);
   
@@ -14,6 +13,7 @@ void setup() {
     Serial.println("Device connected");
   } else {
     Serial.println("Error while connecting device");
+    while(1);
   }
   // input the psk to be written to the device's crypto chip
   uint8_t psk[] = "2555885553752669D66245EBE549BCDE";
@@ -36,8 +36,8 @@ void setup() {
     atecc.lockConfig();
     if(!writePSK(psk)) {Serial.println("Failed write PSK"); return;} 
     else Serial.println("Wrote PSK to Slot 0 successfully!");
-    Serial.println("*** Intial Config Complete, go test the hmac now. ***")
-    Serial.println("*** Once good, come back and type 'lock'")
+    Serial.println("*** Intial Config Complete, go test the hmac now. ***");
+    Serial.println("*** Once good, come back and type 'lock'");
   } else if(Serial.readString() == "lock"){
     atecc.lockDataAndOTP();
   }

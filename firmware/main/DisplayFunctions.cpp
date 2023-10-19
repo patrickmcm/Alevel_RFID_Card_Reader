@@ -71,6 +71,7 @@ void setupWifiMessage() {
 }
 
 void showErrorMessage(String errMsg) {
+  tft.flush();
   tft.fillScreen(ILI9341_RED);
   tft.setTextColor(ILI9341_WHITE);
 
