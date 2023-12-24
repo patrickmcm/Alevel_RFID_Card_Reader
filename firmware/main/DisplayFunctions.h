@@ -9,7 +9,7 @@ void setupDisplay();
 void showDataOnDisplay(String uid, uint8_t size);
 void showErrorMessage(String errMsg);
 void displayStartupConnection();
-void displayRegisterServer();
+void displayRegisterServer(int attempt);
 void registerMessage(int otc);
 void setupWifiMessage();
 

@@ -1,8 +1,8 @@
 #include "DisplayFunctions.h"
 
-#define TFT_DC D1
-#define TFT_CS D4
-#define TFT_RST D2
+#define TFT_DC D4
+#define TFT_CS D8
+#define TFT_RST D3
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
@@ -48,15 +48,18 @@ void displayStartupConnection() {
   tft.println("WiFi...");
 }
 
-void displayRegisterServer() {
+void displayRegisterServer(int attempt) {
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(ILI9341_WHITE);
-
+  
   tft.setCursor(16,90);
   tft.setTextSize(3);
   tft.println("Registering with");
   tft.setCursor(79, 126);
   tft.println("server...");
+  tft.print("Attempt: ");
+  tft.print(attempt);
+  delay(1000);
 }
 
 void setupWifiMessage() {
@@ -71,11 +74,11 @@ void setupWifiMessage() {
 }
 
 void showErrorMessage(String errMsg) {
-  tft.flush();
   tft.fillScreen(ILI9341_RED);
   tft.setTextColor(ILI9341_WHITE);
 
   tft.setCursor(0, (240-(8))/2);
   tft.setTextSize(2);
   tft.println(errMsg);
+  delay(10000000000000000);
 } 

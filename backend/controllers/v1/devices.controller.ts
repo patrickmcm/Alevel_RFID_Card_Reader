@@ -140,11 +140,11 @@ async function requestOTC(req: Request, res: Response) {
             deviceUID: req.body.data.uid
         });
 
-        
 
         const serverTimestamp = Math.round(Date.now() / 1000);
         if (!deviceForConfirmation) { throw new ApiError(httpStatus.NOT_FOUND,"NO_RECORD"); }; // check it actually exists
         if (!isValidNonce(nonce)) { throw new ApiError(httpStatus.BAD_REQUEST,"INVLD_NONCE") } // check if valid nonce
+        
         console.log("recieved body:\n"+JSON.stringify(req.body))
         console.log("recieved signature:\n"+req.body.signature)
         console.log("expeceted signature\n"+hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data)))

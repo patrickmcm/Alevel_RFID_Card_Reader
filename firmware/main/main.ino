@@ -34,6 +34,7 @@ void setup() {
   configTime(0,0,ntpServer);
   setupDevice();
   setupRFID();
+  
   EEPROM.end();
 
   showDataOnDisplay("place holder for loop",3);
