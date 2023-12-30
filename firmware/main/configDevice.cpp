@@ -9,7 +9,7 @@ void setupATECC508A() {
     Serial.println("Device connected");
   } else {
     Serial.println("Error while connecting to crypto IC");
-    //showErrorMessage("[12] ERR Crypto IC not connected");
+    showErrorMessage(CRYPTO_IC_DC);
     delay(10000000000000);
   }
 }
@@ -89,7 +89,7 @@ void setupDevice() {
   Serial.println("Failed fully");
   Serial.print("Free memory: ");
   Serial.println(ESP.getFreeHeap());
-  showErrorMessage("[63] ERR Failed to connect to server. Restart.");
+  showErrorMessage(HTTP_REG_FAIL);
 }
 
 // this function checks for the amount if time in timout, not every x seconds
@@ -126,7 +126,6 @@ bool checkRegStatus(int timeout) {
   }
 
   if (!registered) {
-    if (tries > 5) { showErrorMessage("[92] ERR Failed to connect to server."); }
     return false;
   }
 
@@ -166,28 +165,29 @@ String buildBody(ESP8266WiFiSTAClass WiFi, unsigned long timestamp, int nonce) {
   uint8_t jsonInternalHash[32];
   atecc.hmac(jsonDocBytes, sizeof(jsonDocBytes), 0x000, jsonInternalHash);
 
-  if (atecc.hmac(jsonDocBytes, sizeof(jsonDocBytes), 0x000, jsonInternalHash)) {
-    Serial.println("uint8_t jsonInternalHash[32] = {");
-    for (int i = 0; i < sizeof(jsonInternalHash); i++) {
-      Serial.print("0x");
-      if ((jsonInternalHash[i] >> 4) == 0) Serial.print("0");  // print preceeding high nibble if it's zero
-      Serial.print(jsonInternalHash[i], HEX);
-      if (i != 31) Serial.print(", ");
-      if ((31 - i) % 16 == 0) Serial.println();
-    }
-    Serial.println("};");
-  } else {
-    Serial.println("Failed hmac of message");
-    Serial.println("uint8_t inputBuffer[32] = {");
-    for (int i = 0; i < sizeof(atecc.inputBuffer); i++) {
-      Serial.print("0x");
-      if ((atecc.inputBuffer[i] >> 4) == 0) Serial.print("0");  // print preceeding high nibble if it's zero
-      Serial.print(atecc.inputBuffer[i], HEX);
-      if (i != 31) Serial.print(", ");
-      if ((31 - i) % 16 == 0) Serial.println();
-    }
-    Serial.println("};");
-  }
+  // BELOW IS: debugging for outputting the hmac result
+  // if (atecc.hmac(jsonDocBytes, sizeof(jsonDocBytes), 0x000, jsonInternalHash)) {
+  //   Serial.println("uint8_t jsonInternalHash[32] = {");
+  //   for (int i = 0; i < sizeof(jsonInternalHash); i++) {
+  //     Serial.print("0x");
+  //     if ((jsonInternalHash[i] >> 4) == 0) Serial.print("0");  // print preceeding high nibble if it's zero
+  //     Serial.print(jsonInternalHash[i], HEX);
+  //     if (i != 31) Serial.print(", ");
+  //     if ((31 - i) % 16 == 0) Serial.println();
+  //   }
+  //   Serial.println("};");
+  // } else {
+  //   Serial.println("Failed hmac of message");
+  //   Serial.println("uint8_t inputBuffer[32] = {");
+  //   for (int i = 0; i < sizeof(atecc.inputBuffer); i++) {
+  //     Serial.print("0x");
+  //     if ((atecc.inputBuffer[i] >> 4) == 0) Serial.print("0");  // print preceeding high nibble if it's zero
+  //     Serial.print(atecc.inputBuffer[i], HEX);
+  //     if (i != 31) Serial.print(", ");
+  //     if ((31 - i) % 16 == 0) Serial.println();
+  //   }
+  //   Serial.println("};");
+  // }
 
   String signature = "";
   for (int i = 0; i < sizeof(jsonInternalHash); i++) {
