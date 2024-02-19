@@ -53,6 +53,8 @@ async function registerDevice(req: Request, res: Response) {
             throw new ApiError(httpStatus.BAD_REQUEST,"NULL_PARAMS");
         }
 
+
+
         if(!device) {
             throw new ApiError(httpStatus.BAD_REQUEST,"BAD_CODE");
         } else if (device.registered){
@@ -78,6 +80,7 @@ async function registerDevice(req: Request, res: Response) {
                 success: false,
                 error: e.message
             })
+
         }
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
@@ -145,9 +148,6 @@ async function requestOTC(req: Request, res: Response) {
         if (!deviceForConfirmation) { throw new ApiError(httpStatus.NOT_FOUND,"NO_RECORD"); }; // check it actually exists
         if (!isValidNonce(nonce)) { throw new ApiError(httpStatus.BAD_REQUEST,"INVLD_NONCE") } // check if valid nonce
         
-        console.log("recieved body:\n"+JSON.stringify(req.body))
-        console.log("recieved signature:\n"+req.body.signature)
-        console.log("expeceted signature\n"+hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data)))
         if ((serverTimestamp - clientTimestamp) > 10) { throw new ApiError(httpStatus.REQUEST_TIMEOUT,"TIMEOUT"); } // only accept 5s delay
         if (hmac(deviceForConfirmation.psk, JSON.stringify(req.body.data)) !== signature) { throw new ApiError(httpStatus.BAD_REQUEST,"BAD_SIG"); }; // verify signature
 
@@ -164,6 +164,14 @@ async function requestOTC(req: Request, res: Response) {
         // why i do this is to let the ssid & ip be updated IF they have switched wifi's 
         if (deviceForConfirmation.registered) { throw new ApiError(httpStatus.CONFLICT,'ALR_REG'); }; // checks if registerd
 
+        console.log(`[!] Device ${req.body.data.uid} successfully requested an OTC!`);
+        console.log(`Device Info:`);
+        console.log(`- Device UID: ${req.body.data.uid}`);
+        console.log(`- SSID: ${ssid}`);
+        console.log(`- Public IP: ${req.ip}`);
+        console.log(`- OTC: ${otc}`);
+        // log the device info
+        
         return res.json({
             success: true,
             error: null,
