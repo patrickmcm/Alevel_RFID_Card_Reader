@@ -2,6 +2,11 @@ backend/node_modules
 backend/package-lock.json
 backend/dist
 backend/.vscode
+frontend/.vscode
+frontend/node_modules
+frontend/dist
+frontend/vendors
+backend/public
 
 backend/config.ts
 .vscode/

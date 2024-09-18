@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Manage Transactions </title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="../vendors/bootstrap-table/bootstrap-table.min.css" />
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../partials/_navbar.html -->
+    <%- include('../partials/_navbar', { session : session }) %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial -->
+      <!-- partial:../partials/_sidebar.html -->
+      <%- include('../partials/_sidebar') %>
+      <!-- partial -->
+      <div class="main-panel">          
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-8 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title">Users</h4>
+                        <button type="submit" class="btn btn-primary btn-icon btn-rounded ti-plus" data-bs-toggle="modal" data-bs-target="#addUserModal"></button>
+                    </div>
+                    <!-- Add User Modal -->
+                    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="addUserModalLabel">Add User</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="forms-sample" id="addUserForm">
+                                    <div class="form-group">
+                                        <label for="userName">Name</label>
+                                        <input type="text" class="form-control p-input" id="deviceName" aria-describedby="deviceNameHelp" placeholder="Enter User Name">
+                                        <small id="deviceNameHelp" class="form-text text-muted text-success"><span class="fa fa-info mt-1"></span>  Name of the user</small>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary" id="submitUser">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    
+
+                    <div class="table-responsive">
+                      <table class="table table-hover" data-cell-style="" data-toggle="table" data-height="460" data-pagination="true" data-search="true">
+                        <thead>
+                          <tr>
+                            <th data-field="userID">#</th>
+                            <th data-field="userName">Name</th>
+                            <th data-field="createdDate">Created</th>
+                            <th data-field="balance">Balance</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>xaysx1232</td>
+                                <td>Patrick</td>
+                                <td>12 May 2017</td>
+                                <td>$ 100</td>
+                            </tr>
+                            <tr>
+                                <td>xsad4123</td>
+                                <td>John</td>
+                                <td>15 May 2017</td>
+                                <td>$ 200</td>
+                            </tr>
+                            <tr>
+                                <td>zxsas1243</td>
+                                <td>Allen</td>
+                                <td>14 May 2017</td>
+                                <td>$ 300</td>
+                            </tr>
+                            <tr>
+                                <td>fdadf3123</td>
+                                <td>Mark</td>
+                                <td>16 May 2017</td>
+                                <td>$ 400</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Current Card Configuration</h4>
+                    <form>
+                        <div class="mb-3">
+                          <label for="dailyBalInput" class="form-label">Daily Balance £</label>
+                          <input type="number" class="form-control" id="dailyBalInput" aria-describedby="dailyBalHelp">
+                          <div id="dailyBalHelp" class="form-text">Put a number to give a free daily balance, 0 to disable</div>
+                        </div>
+                        <div class="mb-3">
+                          <input type="checkbox" class="form-check-input" id="fraudActionChecked" aria-describedby="fruadHelp">
+                          <label for="fraudActionChecked" class="form-check-label mx-2">Fraud Action</label>
+                          <div id="fruadHelp" class="form-text">Should a user be suspended if fraud is detected?</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../vendors/js/vendor.bundle.base.js"></script>
+  <script src="../vendors/bootstrap-table/bootstrap-table.min.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../js/off-canvas.js"></script>
+  <script src="../js/hoverable-collapse.js"></script>
+  <script src="../js/template.js"></script>
+  <script src="../js/settings.js"></script>
+  <script src="../js/todolist.js"></script>
+  <!-- endinject -->
+</body>
+
+</html>

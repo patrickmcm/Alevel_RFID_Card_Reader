@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import {deviceSchema} from '../db/devices.types'
+import {deviceSchema} from '../db/devices'
 import { Collection } from 'mongodb'
 
 async function generateOTC(devices:Collection<deviceSchema>) {

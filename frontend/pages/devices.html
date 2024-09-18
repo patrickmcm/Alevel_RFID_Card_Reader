@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Devices Transactions </title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../partials/_navbar.html -->
+    <%- include('../partials/_navbar', { session : session }) %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial -->
+      <!-- partial:../partials/_sidebar.html -->
+      <%- include('../partials/_sidebar') %>
+      <!-- partial -->
+      
+      <div class="main-panel">          
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title">Your Devices</h4>
+                        <button type="submit" class="btn btn-primary btn-icon btn-rounded ti-plus" data-bs-toggle="modal" data-bs-target="#registerDeviceModal"></button>
+                    </div>
+                    <!-- Add Device Modal -->
+                    <div class="modal fade" id="registerDeviceModal" tabindex="-1" aria-labelledby="registerDeviceModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="registerDeviceModalLabel">Add Device</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="forms-sample" id="addDeviceForm" action="/v1/devices/register">
+                                    <div class="form-group">
+                                        <label for="deviceName">Name</label>
+                                        <input type="text" class="form-control p-input" id="deviceName" aria-describedby="deviceNameHelp" placeholder="Enter Device Name">
+                                        <small id="deviceNameHelp" class="form-text text-muted text-success"><span class="fa fa-info mt-1"></span>  Descriptive name for your device</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deviceLocation">Location</label>
+                                        <input type="text" class="form-control p-input" id="deviceLocation" placeholder="Enter Device Location">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="otc">One Time Code (OTC)</label>
+                                        <input type="text" class="form-control p-input" id="otc" aria-describedby="otcHelp" placeholder="Enter OTC">
+                                        <small id="otcHelp" class="form-text text-muted text-success"><span class="fa fa-info mt-1"></span>  Turn on your device and connect to WiFi to get a code</small>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary" id="submitDevice">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>WiFi</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <%-                            
+                            devices.map(function(device) {
+                              return `
+                                <tr>
+                                  <td>${device.name}</td>
+                                  <td>${device.location}</td>
+                                  <td>${device.ssid}</td>
+                                  <td><label class="badge badge-success">Online</label></td>
+                                </tr>
+                              `
+                            }).join('')
+
+                            %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../vendors/js/vendor.bundle.base.js"></script>
+  <script src="../vendors/sweetalert2/sweetalert2.all.min.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../js/off-canvas.js"></script>
+  <script src="../js/hoverable-collapse.js"></script>
+  <script src="../js/template.js"></script>
+  <script src="../js/devices.js"></script>
+  <!-- endinject -->
+</body>
+
+</html>
