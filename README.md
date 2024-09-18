@@ -8,3 +8,7 @@ A-Level Project that uses an ESP8226 MCU to process card transactions with an MF
 - Secure communication between reader and server to ensure its identity to the server
 - Records all transactions and they can be easily fetched and read through an easy to use admin dashboard.
 - Anti-Fruad systems
+
+
+
+## This project is now finished, please read the documentation PDF if you are intrested about the development process.
